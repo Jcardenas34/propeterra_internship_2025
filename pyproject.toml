@@ -1,0 +1,36 @@
+[build-system]
+requires=["setuptools"]
+
+
+[project]
+name = "propeterra_internship_2025"
+version = "1.0.0"
+description = "A RAG pipeline for prompting real estate market for Propeterra"
+# install chromadb via pip, has problems otherwise for some reason
+dependencies = [
+    "requests",
+    "numpy",
+    "torch",
+    "folium",
+    "pypdf2",
+    "langchain",
+    "tiktoken",
+    "scikit-learn",
+    "transformers",
+    "openai",
+    "anthropic",
+    "mistralai",
+    "ai21",
+    "google",
+]
+
+authors = [
+  { name = "Juan Cardenas", email = "cardenas.juan5453@gmail.com" }
+]
+requires-python = "<=3.13"
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+
+[tool.setuptools.packages.find]
+where = ["src"]
