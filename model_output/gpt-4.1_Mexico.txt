@@ -1,0 +1,68 @@
+Here are 10 accessible links providing information on Mexico's real estate market, categorized by data type:
+
+```json
+{
+  "Economic Metrics": [
+    {
+      "title": "Mexico Real Estate Market Size & Outlook, 2024-2030",
+      "url": "https://www.grandviewresearch.com/horizon/outlook/real-estate-market/mexico",
+      "description": "Provides projections and growth rates for Mexico's real estate market, including revenue forecasts and segment analyses."
+    },
+    {
+      "title": "Mexico: 2024 Article IV Consultation and Review Under the Flexible Credit Line Arrangement",
+      "url": "https://www.elibrary.imf.org/view/journals/002/2024/317/article-A001-en.xml",
+      "description": "Offers insights into Mexico's economic policies and their impact on the real estate sector, including housing subsidies and property registration reforms."
+    }
+  ],
+  "Climate Impact": [
+    {
+      "title": "Climate Change in Mexico",
+      "url": "https://en.wikipedia.org/wiki/Climate_change_in_Mexico",
+      "description": "Discusses Mexico's greenhouse gas emissions, climate policies, and their implications for various sectors, including real estate."
+    },
+    {
+      "title": "Real Estate and Environmental Challenges in Mexico",
+      "url": "https://chambers.com/legal-trends/real-estate-development-and-environmental-regulations-in-mexico",
+      "description": "Explores the relationship between real estate development and environmental regulations in Mexico, highlighting sustainability practices."
+    }
+  ],
+  "Government Policies and Regulations": [
+    {
+      "title": "Real Estate Comparative Guide - Mexico",
+      "url": "https://www.mondaq.com/mexico/real-estate-and-construction/1379206/real-estate-comparative-guide",
+      "description": "Provides an overview of real estate laws and regulations in Mexico, including initiatives promoting green buildings and energy efficiency."
+    },
+    {
+      "title": "Mexico Country Risk Report & Analysis",
+      "url": "https://www.allianz-trade.com/en_US/resources/country-reports/mexico.html",
+      "description": "Analyzes Mexico's economic and political environment, assessing risks and opportunities in the real estate sector."
+    }
+  ],
+  "Real Estate Professionals and Tools": [
+    {
+      "title": "Real Estate Market Research and Analysis - Crea Soluciones",
+      "url": "https://creabrigthsolutions.ca/real-estate-market-research/",
+      "description": "Discusses tools and resources for conducting real estate market analysis in Mexico, including data from official institutions."
+    },
+    {
+      "title": "Exploring Latin America's Real Estate Markets: Mexico",
+      "url": "https://www.adventuresincre.com/exploring-latin-americas-real-estate-markets-mexico/",
+      "description": "Provides insights into Mexico's real estate market, including public policies, exchange rate stability, and the climate for foreign investment."
+    }
+  ],
+  "Sustainability Initiatives": [
+    {
+      "title": "Sustainability Will Reshape Real Estate Development and Investment in Mexico",
+      "url": "https://www.gbci.org/sustainability-will-reshape-real-estate-development-and-investment-mexico",
+      "description": "Explores how sustainability trends are influencing real estate development and investment in Mexico."
+    },
+    {
+      "title": "Mexico: 2023 Article IV Consultation-Press Release and Staff Report",
+      "url": "https://www.elibrary.imf.org/view/journals/002/2023/356/article-A001-en.xml",
+      "description": "Discusses Mexico's climate change mitigation strategies and their impact on various sectors, including real estate."
+    }
+  ]
+}
+```
+
+These resources offer comprehensive information on various aspects of Mexico's real estate market, including economic metrics, climate impact, government policies, professional tools, and sustainability initiatives. 
