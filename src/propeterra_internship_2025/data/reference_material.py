@@ -8,6 +8,32 @@
 # "http://propeterra.notonlycodes.com/#/group/0",
 # "https://www.propeterra.com/propeterra-data-room",
 
+example_data_sheet_links:list[str] = [
+
+
+]
+
+
+clean_reference_material = [
+"https://www.wri.org/",
+"https://www.encuentra24.com/el-salvador-en/cnad/statistic",
+"https://resourcewatch.org/data/explore",
+"https://www.reri.org/index.cfm",
+"https://www.reit.com/data-research",
+"https://www.imf.org/external/research/housing/index.htm",
+"https://www.statista.com/topics/5466/global-housing-market/#editorsPicks",
+"https://www.reportlinker.com/market-report/Residential-Construction/510721/Property?gclid=Cj0KCQjwnv71BRCOARIsAIkxW9FwC0S3lU3ZUYFgPuh0dng4KfOLfiN9VezSWhuiaYv79nw-brYDZsgaApMDEALw_wcB",
+"https://www.lseg.com/en/data-analytics/financial-data/economic-data",
+"https://www.aiddata.org/geoquery",
+"https://www.globalpropertyguide.com/latin-america/mexico/price-history",
+"https://thelatinvestor.com/blogs/news/mexico-price-forecasts",
+"https://mycasa.mx/blog/good-time-to-buy-property-in-mexico-2025-market-insights",
+"https://www.bbvaresearch.com/en/publicaciones/real-estate-outlook-mexico-first-semester-2025/"
+"https://www.grandviewresearch.com/horizon/outlook/real-estate-market/mexico",
+"https://www.elibrary.imf.org/view/journals/002/2024/317/article-A001-en.xml",
+"https://www.mondaq.com/mexico/real-estate-and-construction/1379206/real-estate-comparative-guide",
+]
+
 unclean_reference_material = [
 "https://www.wri.org/",
 "https://www.esri.com/en-us/industries/real-estate/webinars",
@@ -33,6 +59,7 @@ unclean_reference_material = [
 "https://www.aiddata.org/blog/urban-boundaries-for-200-cities-added-to-aiddatas-geoquery-tool",
 "https://www.aiddata.org/blog/geoquery-reaches-10-000-dataset-requests",
 "https://www.aiddata.org/events/workshop-pioneering-development-research-using-geospatial-data",
+
 "https://www.aiddata.org/datasets",
 "https://www.aiddata.org/geoquery",
 "https://www.tableau.com/products/trial",

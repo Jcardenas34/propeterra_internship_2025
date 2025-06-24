@@ -3,22 +3,11 @@ import logging
 import argparse
 from openai import OpenAI
 from propeterra_internship_2025.data.all_countries import regions
-from propeterra_internship_2025.utils.prompt_templates import Prompt
+from propeterra_internship_2025.utils.prompt_templates import Prompt, create_prompt
 from propeterra_internship_2025.utils.model_query import QueryModel
 
 
 logging.basicConfig(level=logging.INFO)
-
-
-def create_prompt(n_sources:int, country_of_interest:str, prompt_num:int) -> str:
-    ''' Generates the prompt according to specified template "prompt_num" '''
-    n_established_prompts=4
-    if prompt_num > n_established_prompts:
-        raise ValueError(f'Prompts above {n_established_prompts} are not supported yet')
-    return Prompt(num_sources=n_sources, country_of_interest=country_of_interest, prompt_num=prompt_num).construct_prompt()
-
-
-
 
 
 def main(args: argparse.Namespace) -> None:
@@ -40,9 +29,12 @@ def main(args: argparse.Namespace) -> None:
         prompt = create_prompt(n_sources=args.n_sources,
                                country_of_interest=args.country,
                                prompt_num=args.prompt_num)
+        query = QueryModel(args.model, args.country, prompt)
+        query.initialize_file()
+        print(query.system_prompt, "\n\n")
         print(prompt, "\n\n")
-        QueryModel(args.model, args.country, prompt).query_sonar_pro()
-        # query_model(args.model, args.country, prompt)
+        # query.query_sonar_pro()
+        
     else:
 
         countries = regions.get(region_of_interest)
@@ -68,8 +60,8 @@ if __name__ == "__main__":
 
     parser = argparse.ArgumentParser()
     parser.add_argument("-r","--region", type=str, default="Latin America", choices=regions.keys(), help="The regions that you want to probe, will loop over all countries in region")
-    parser.add_argument("-ns","--n_sources", type=int, default=10, help="The number of links you want to get back from the model")
-    parser.add_argument("-pn", "--prompt_num", type=int, default=1, help="The prompt template that you want to submit to the model. List of all prompts is located in 'prompt templates'")
+    parser.add_argument("-ns","--n_sources", type=int, default=15, help="The number of links you want to get back from the model")
+    parser.add_argument("-pn", "--prompt_num", type=int, default=5, help="The prompt template that you want to submit to the model. List of all prompts is located in 'prompt templates'")
     parser.add_argument("-c", '--country', type=str, default="Mexico", help="Specify a single country you would like to generate a prompt for")
     parser.add_argument("-m", "--model", type=str, default="gpt-4.1", choices=["gpt-4.1","sonar_pro"], help="The model that you want to query")
 

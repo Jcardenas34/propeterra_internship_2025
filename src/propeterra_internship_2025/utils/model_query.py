@@ -1,4 +1,5 @@
 import os
+from datetime import date
 from openai import OpenAI
 
 class QueryModel():
@@ -8,6 +9,10 @@ class QueryModel():
         self.model = model
         self.country = country
         self.prompt = prompt
+        self.system_prompt = "You are an artificial intelligence assistant and you need to aid the user in the collection of data links regarding the real estate industry \n" \
+                    "in various countries that are specified by the user. Your job is to collect links to web pages that have data in the form of articles, \n"\
+                    "downloadable spreadsheets, plots, on macro economic trends tha can affect the housing market, and that could provide insights on the current \n"\
+                    "and future state of the real estate industry in the chosen country. \n"
 
         self.SUPPORTED_MODELS = {"gpt-4.1":os.environ.get("OPENAI_API_KEY"),
                                  "sonar_pro":os.environ.get("PERPLEXITY_API_KEY")}
@@ -26,6 +31,37 @@ class QueryModel():
             file.write(response)
         print(response)
 
+    def initialize_file(self):
+        ''' Creates a default template to fill with model submission details for documentation purposes '''
+        template = f'''
+User and Date:
+------------------
+user: Juan Cardenas
+date: {date.today()}
+
+Country:
+------------
+country: {self.country}
+
+Data sourced using:
+----------------------
+method: 
+model: {self.model}
+
+Prompt:
+-----------------------
+{self.system_prompt}
+
+{self.prompt}
+
+Returned Links:
+----------------------
+
+                    '''
+        with open(f"./model_output/{self.model}_{self.country}_{date.today()}.txt", "a", encoding="utf8") as file:
+            file.write(template)
+        print(template)
+
     def query_openai(self) -> None:
         ''' Will query the selected model and write the output to a text file named {model}_{country}.txt '''
 
@@ -42,17 +78,15 @@ class QueryModel():
     def query_sonar_pro(self) -> None:
         ''' Will query perplexity's sonar-pro model and produce an output text file named {model}_{country}.txt '''
 
+        # Write the system prompt to the output file
+        self.write_to_file(self.model, self.country, self.system_prompt)
 
+        # What the model will receive
         messages = [
             {
                 "role": "system",
-                "content": (
-                    "You are an artificial intelligence assistant and you need to "
-                    "Aid the user in the collection of data links regarding the real estate industry."
-                    "In various countries that are specified by the user. Your job is to collect links to web pages"
-                    "that have data in the form of articles, downloadable spreadsheets, plots, on macro economic trends that"
-                    "can affect the housing market, and that could provide insights on the current and future state of the real estate"
-                    "indutry in the chosen country."
+                "content": ( 
+                    self.system_prompt
                 ),
             },
             {   
@@ -66,20 +100,12 @@ class QueryModel():
         client = OpenAI(api_key=self.SUPPORTED_MODELS[self.model], base_url="https://api.perplexity.ai")
         # chat completion without streaming
         response = client.chat.completions.create(
-            model="sonar-pro",
+            model=self.model,
             messages=messages,
         )
         message_text = response.choices[0].message.content
         print(message_text)
 
-        # chat completion with streaming
-        # response_stream = client.chat.completions.create(
-        #     model="sonar-pro",
-        #     messages=messages,
-        #     stream=True,
-        # )
-        # for response in response_stream:
-        #     print(response)
 
         self.write_to_file(self.model, self.country, message_text)
 
