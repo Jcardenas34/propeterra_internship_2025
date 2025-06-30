@@ -32,6 +32,15 @@ clean_reference_material = [
 "https://www.grandviewresearch.com/horizon/outlook/real-estate-market/mexico",
 "https://www.elibrary.imf.org/view/journals/002/2024/317/article-A001-en.xml",
 "https://www.mondaq.com/mexico/real-estate-and-construction/1379206/real-estate-comparative-guide",
+"https://data.worldbank.org/country/equatorial-guinea",
+"https://www.imf.org/en/Countries/",
+"https://habitat3.org/the-new-urban-agenda/preparatory-process/national-participation/",
+"https://tradingeconomics.com/countries",
+"https://investmentpolicy.unctad.org/investment-laws/laws/",
+"https://resourcewatch.org/data/explore/cit037-Upward-and-Outward-Expansion-Index?section=All+data&selectedCollection=&zoom=2.998966584650424&lat=5.394640838194866&lng=25.602201742583247&pitch=0&bearing=0&basemap=dark&labels=light&layers=%255B%257B%2522dataset%2522%253A%252240ffc305-609a-4367-a24f-816d9d43e508%2522%252C%2522opacity%2522%253A1%252C%2522layer%2522%253A%25221856044a-9d63-4b57-a582-ac316f1d93a6%2522%257D%255D&aoi=&page=1&sort=most-viewed&sortDirection=-1",
+"https://www.property24.co.bw/",
+"https://historico.datos.gob.mx/",
+"https://tradingeconomics.com/colombia/housing-index",
 ]
 
 unclean_reference_material = [
