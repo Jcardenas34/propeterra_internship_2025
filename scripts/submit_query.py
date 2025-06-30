@@ -36,7 +36,7 @@ def main(args: argparse.Namespace) -> None:
         query.initialize_file()
         print(query.system_prompt, "\n\n")
         print(prompt, "\n\n")
-        # query.query_sonar_pro()
+        query.query_sonar_pro()
         
     else:
 
