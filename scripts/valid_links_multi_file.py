@@ -1,6 +1,32 @@
 import json
 import requests
 import argparse
+import logging
+import sys
+
+
+
+def setup_logger(country):
+    logger = logging.getLogger(__name__)
+    logger.setLevel(logging.INFO)
+
+    # File handler
+    fh = logging.FileHandler(f"{country}_linvalid_link.log")
+    fh.setLevel(logging.INFO)
+
+    # Console handler (optional)
+    ch = logging.StreamHandler(sys.stdout)
+    ch.setLevel(logging.INFO)
+
+    formatter = logging.Formatter('%(levelname)s - %(message)s')
+    fh.setFormatter(formatter)
+    ch.setFormatter(formatter)
+
+    logger.addHandler(fh)
+    logger.addHandler(ch)
+
+    return logger
+
 
 def extract_first_json_object(text):
     """
@@ -26,19 +52,22 @@ def extract_first_json_object(text):
 
 def check_link(link):
     """
-    Check if a link returns 404.
+    Check if a link returns 404 or any other fail type.
     """
+    fail_types = [204, 400, 401, 404, 405, 408, 410, 429, 502, 503, 504]
     try:
         response = requests.head(link, timeout=5)
-        if response.status_code == 404:
-            return True
+        # print(response.status_code)
+        if response.status_code in fail_types:
+            return True, response.status_code
         else:
-            return False
-    except requests.RequestException as e:
-        print(f"Error checking link {link}: {e}")
-        return None
+            return False, response.status_code
+    # except requests.RequestException as e:
+    except requests.RequestException:
+        # print(f"Error checking link {link}: {e}")
+        return None, -1
 
-def process_file(filename):
+def process_file(filename, logger, valid_link_tracker):
     """
     Process a single file and return valid entries + notes.
     """
@@ -50,7 +79,7 @@ def process_file(filename):
     json_block = extract_first_json_object(text)
 
     if not json_block:
-        print(f"[WARN] No JSON block found in '{filename}'")
+        logger.warning(f"[WARN] No JSON block found in '{filename}'")
         return [], [], {}
 
 
@@ -58,47 +87,56 @@ def process_file(filename):
         data = json.loads(json_block)
         # print(data)
     except json.JSONDecodeError as e:
-        print(f"[ERR] JSON decode error in '{filename}': {e}")
+        logger.error(f"[ERR] JSON decode error in '{filename}': {e}")
         return [], [], {}
 
     data_sources = data.get("data_sources", [])
     notes = data.get('notes', {})
 
-    print(f"\n📂 Processing '{filename}' — found {len(data_sources)} sources.")
+    logger.info(f"\n📂 Processing '{filename}' — found {len(data_sources)} sources.")
 
     valid_entries = []
     # saving invlid links because they are often not entirely invalid, could lead to good sources
     invalid_entries = []
 
+
     for idx, item in enumerate(data_sources, 1):
         link = item.get('link')
         if link:
-            is_404 = check_link(link)
+            is_404, code = check_link(link)
             if is_404 is True:
-                print(f"[404] #{idx}: {link}")
+                logger.error(f"[{code}] #{idx}: {link}")
                 invalid_entries.append(item)
             elif is_404 is False:
-                print(f"[OK ] #{idx}: {link}")
-                valid_entries.append(item)
+                logger.info(f"[OK ] #{idx}: {link}")
+                if link in valid_link_tracker:
+                    logger.error(f'Link: {link} is redundant')
+                    continue
+                else:
+                    valid_link_tracker.append(link)
+                    valid_entries.append(item)
             else:
-                print(f"[ERR] #{idx}: {link} could not be checked.")
+                logger.error(f"[ERR] #{idx}: {link} could not be checked.")
                 invalid_entries.append(item)
         else:
-            print(f"[WARN] #{idx}: No 'link' field found.")
+            logger.warning(f"[WARN] #{idx}: No 'link' field found.")
 
-    print(f"✅ Valid entries in '{filename}': {len(valid_entries)}/{len(data_sources)}")
+    logger.info(f"✅ Valid entries in '{filename}': {len(valid_entries)}/{len(data_sources)}")
     return valid_entries, invalid_entries, notes
 
 def main(args):
     # 🔑 List of files to process — adjust as needed!
     input_files = args.input 
 
+    logger = setup_logger(args.country)
+
     all_valid_entries = []
     all_invalid_entries = []
+    valid_link_tracker = []
     notes = {}
 
     for file in input_files:
-        valid_entries, invalid_entries, file_notes = process_file(file)
+        valid_entries, invalid_entries, file_notes = process_file(file, logger, valid_link_tracker)
         all_valid_entries.extend(valid_entries)
         all_invalid_entries.extend(invalid_entries)
 
@@ -106,7 +144,7 @@ def main(args):
         if not notes and file_notes:
             notes = file_notes
 
-    print(f"\n🎉 Total valid entries: {len(all_valid_entries)}")
+    logger.info(f"\n🎉 Total valid entries: {len(all_valid_entries)}/{len(all_valid_entries+all_invalid_entries)}")
 
     output = {
         "data_sources": all_valid_entries,
@@ -124,7 +162,7 @@ def main(args):
         json.dump(dead_links, out_file, indent=2, ensure_ascii=False)
 
 
-    print(f"\n✅ Saved combined valid links to '{args.country}_links.json'.")
+    logger.info(f"\n✅ Saved combined valid links to '{args.country}_links.json'.")
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()

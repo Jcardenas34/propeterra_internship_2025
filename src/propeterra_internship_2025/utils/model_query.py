@@ -34,8 +34,10 @@ class QueryModel():
         
     def write_to_file(self, model:str, country:str , response, prompt_number:int):
         ''' Writes the response from the model to a text file. And outputs prompt to console'''
-
-        with open(f"model_output/{model}_{country}_{date.today()}_prompt_{prompt_number}.txt", "a", encoding="utf8") as file:
+        if not os.path.isdir(f"model_output/{country}"):
+            os.mkdir(f"model_output/{country}")
+            
+        with open(f"model_output/{country}/{model}_{country}_{date.today()}_prompt_{prompt_number}.txt", "a", encoding="utf8") as file:
             file.write(response)
         print(response)
 

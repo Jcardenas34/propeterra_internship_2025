@@ -70,7 +70,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("-r","--region", type=str, default="Latin America", choices=regions.keys(), help="The regions that you want to probe, will loop over all countries in region")
     parser.add_argument("-ns","--n_sources", type=int, default=60, help="The number of links you want to get back from the model")
-    parser.add_argument("-pn", "--prompt_num", type=int, default=11, help="The prompt template that you want to submit to the model. List of all prompts is located in 'prompt templates'")
+    parser.add_argument("-pn", "--prompt_num", type=int, default=12, help="The prompt template that you want to submit to the model. List of all prompts is located in 'prompt templates'")
     parser.add_argument("-spn", "--system_prompt_num", type=int, default=2, help="The system prompt template that you want to submit to the model. List of all prompts is located in 'prompt templates'")
     parser.add_argument("-c", '--country', type=str, default="Mexico", help="Specify a single country you would like to generate a prompt for")
     parser.add_argument("-m", "--model", type=str, default="sonar-pro", choices=["gpt-4.1","sonar", "sonar-pro", "sonar-deep-research", "ms_copilot", "mistral", "gemini_2.5_flash"], help="The model that you want to query")
