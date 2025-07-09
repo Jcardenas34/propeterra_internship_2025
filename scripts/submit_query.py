@@ -3,7 +3,7 @@ import logging
 import argparse
 from openai import OpenAI
 from propeterra_internship_2025.data.all_countries import regions, all_countries
-from propeterra_internship_2025.utils.prompt_templates import Prompt, create_prompt
+from propeterra_internship_2025.utils.prompt_templates import Prompt, create_prompt, create_real_estate_professional_prompt
 from propeterra_internship_2025.utils.model_query import QueryModel
 
 
@@ -15,9 +15,7 @@ def main(args: argparse.Namespace) -> None:
     Iterate over the countries in the region of interest and submit a query to the
     LLM (Which can be specified) 
     '''
-    # Pre-defined Region of interest, can choose
 
-    # region_of_interest = "Latin America"
     region_of_interest = args.region
 
 
@@ -28,7 +26,7 @@ def main(args: argparse.Namespace) -> None:
     if args.country:
         if args.country not in all_countries:
             raise TypeError('Selected country {} not found, maybe typo. Please double check.')
-        
+         
         system_prompt, user_prompt = create_prompt(n_sources=args.n_sources,
                                country_of_interest=args.country,
                                prompt_num=args.prompt_num,
@@ -40,7 +38,7 @@ def main(args: argparse.Namespace) -> None:
         print(prompt, "\n\n")
 
         # Submitting the actual query
-        # query.query_perplexity()
+        # query.submit_query()
         
     else:
 
@@ -73,7 +71,7 @@ if __name__ == "__main__":
     parser.add_argument("-pn", "--prompt_num", type=int, default=12, help="The prompt template that you want to submit to the model. List of all prompts is located in 'prompt templates'")
     parser.add_argument("-spn", "--system_prompt_num", type=int, default=2, help="The system prompt template that you want to submit to the model. List of all prompts is located in 'prompt templates'")
     parser.add_argument("-c", '--country', type=str, default="Mexico", help="Specify a single country you would like to generate a prompt for")
-    parser.add_argument("-m", "--model", type=str, default="sonar-pro", choices=["gpt-4.1","sonar", "sonar-pro", "sonar-deep-research", "ms_copilot", "mistral", "gemini_2.5_flash"], help="The model that you want to query")
+    parser.add_argument("-m", "--model", type=str, default="sonar-pro", choices=["gpt-4.1","sonar", "sonar-pro", "sonar-deep-research", "ms_copilot", "mistral", "gemini_2.5_flash", "manus"], help="The model that you want to query")
 
 
     args = parser.parse_args()
