@@ -73,7 +73,8 @@ def main(args: argparse.Namespace) -> None:
                 sys.exit(f"Error: The user prompt contains a placeholder for the country name. Please ensure that the prompt is correctly formatted before submitting to the model.")
 
             query.initialize_real_estate_questions_file()
-            query.query_model(real_estate_questions=True)
+            # query.query_model(real_estate_questions=True)
+            query.query_perplexity_langchain(real_estate_questions=True)
 
             # if idx+1 == 2:
             #     break

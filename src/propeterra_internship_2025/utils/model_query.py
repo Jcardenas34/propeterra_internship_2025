@@ -1,6 +1,9 @@
 import os
 from datetime import date
 from openai import OpenAI
+from langchain_core.prompts import ChatPromptTemplate
+from langchain_perplexity import ChatPerplexity
+
 from propeterra_internship_2025.utils.user_prompts import user_prompt_dictionary, real_estate_professionals_prompt_dictionary
 from propeterra_internship_2025.utils.system_prompts import system_prompt_dictionary
 
@@ -198,6 +201,40 @@ AI Response:
             self.write_to_real_estate_questions_file(self.model, self.country, message_text, self.prompt_number, self.outfile_comment)
         else:
             self.write_to_file(self.model, self.country, message_text, self.prompt_number)
+
+
+    def query_perplexity_langchain(self, real_estate_questions:bool=False) -> None:
+        ''' Querys perplexity via API and langchain functionlity, allows for extraction of citations., and more comprehensive functionality '''
+
+        chat = ChatPerplexity(temperature=0, pplx_api_key=self.supported_models[self.model], model=self.model)
+        system = self.system_prompt
+        human = "{input}"
+        prompt = ChatPromptTemplate.from_messages([("system", system), ("human", human)])
+        
+        chain = prompt | chat
+        response = chain.invoke({"input": self.user_prompt})
+        print("Perplexity's response: \n")
+        print(response.content)
+
+        message_text = response.content + "\n\n"
+
+        print("Citations: \n")
+        # citations = response.model_extra.get("citations")
+        citations = response.additional_kwargs['citations']
+        if citations:
+            print("\nCitations:")
+            message_text += "Citations:\n"
+            for citation in citations:
+                print(citation)
+                message_text += f"{citation}\n"
+
+
+        if real_estate_questions:
+            self.write_to_real_estate_questions_file(self.model, self.country, message_text, self.prompt_number, self.outfile_comment)
+        else:
+            self.write_to_file(self.model, self.country, message_text, self.prompt_number)
+
+
 
     def query_model(self, real_estate_questions:bool=False) -> None:
         ''' The overarching that will submit a query to the selected model. '''
