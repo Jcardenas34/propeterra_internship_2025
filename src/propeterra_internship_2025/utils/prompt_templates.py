@@ -158,7 +158,7 @@ class Prompt:
 
     
         # user_prompt = user_prompt.replace('__num_sources__', self.num_sources)
-        # user_prompt = user_prompt.replace('__country_of_interest__', self.country_of_interest)
+        split_text = split_text.replace('__country_of_interest__', self.country_of_interest)
         # user_prompt = user_prompt.replace('__native_language__', self.native_language.get(self.country_of_interest, ""))
         # user_prompt = user_prompt.replace('__links__', " \n".join(self.links[:30]))
         # user_prompt = user_prompt.replace('__prompt_num__', str(self.prompt_num))

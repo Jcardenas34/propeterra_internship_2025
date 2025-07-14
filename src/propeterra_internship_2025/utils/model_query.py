@@ -1,8 +1,19 @@
 import os
 from datetime import date
 from openai import OpenAI
-from langchain_core.prompts import ChatPromptTemplate
+from langchain_openai import ChatOpenAI
 from langchain_perplexity import ChatPerplexity
+from langchain_google_genai import ChatGoogleGenerativeAI
+from langchain_core.prompts import ChatPromptTemplate
+from google.generativeai.types.safety_types import HarmCategory, HarmBlockThreshold
+
+# Define safety settings to be very permissive for all categories
+safety_settings = {
+    HarmCategory.HARM_CATEGORY_HARASSMENT: HarmBlockThreshold.BLOCK_NONE,
+    HarmCategory.HARM_CATEGORY_HATE_SPEECH: HarmBlockThreshold.BLOCK_NONE,
+    HarmCategory.HARM_CATEGORY_SEXUALLY_EXPLICIT: HarmBlockThreshold.BLOCK_NONE,
+    HarmCategory.HARM_CATEGORY_DANGEROUS_CONTENT: HarmBlockThreshold.BLOCK_NONE,
+}
 
 from propeterra_internship_2025.utils.user_prompts import user_prompt_dictionary, real_estate_professionals_prompt_dictionary
 from propeterra_internship_2025.utils.system_prompts import system_prompt_dictionary
@@ -27,7 +38,8 @@ class QueryModel():
                                  "sonar-deep-research":os.environ.get("PERPLEXITY_API_KEY_PROPETERRA"),
                                  "ms_copilot":os.environ.get("MS_COPILOT_API_KEY"),
                                  "mistral":         os.environ.get("MISTRAL_API_KEY"),
-                                 "gemini_2.5_flash":os.environ.get("GEMINI_API_KEY"),
+                                 "gemini-2.5-flash":os.environ.get("GEMINI_API_KEY_PROPETERRA"),
+                                 "gemini-2.5-pro":  os.environ.get("GEMINI_API_KEY_PROPETERRA"),
                                  "manus":           os.environ.get("MANUS_API_KEY")}
 
 
@@ -204,7 +216,7 @@ AI Response:
 
 
     def query_perplexity_langchain(self, real_estate_questions:bool=False) -> None:
-        ''' Querys perplexity via API and langchain functionlity, allows for extraction of citations., and more comprehensive functionality '''
+        ''' Querys perplexity via API and langchain functionality, allows for extraction of citations., and more comprehensive functionality '''
 
         chat = ChatPerplexity(temperature=0, pplx_api_key=self.supported_models[self.model], model=self.model)
         system = self.system_prompt
@@ -235,6 +247,82 @@ AI Response:
             self.write_to_file(self.model, self.country, message_text, self.prompt_number)
 
 
+    def query_openai_langchain(self, real_estate_questions:bool=False) -> None:
+        ''' Querys OpenAI via API and langchain functionality '''
+
+        chat = ChatOpenAI(temperature=0, openai_api_key=self.supported_models[self.model], model=self.model)
+        system = self.system_prompt
+        human = "{input}"
+        prompt = ChatPromptTemplate.from_messages([("system", system), ("human", human)])
+        
+        chain = prompt | chat
+        response = chain.invoke({"input": self.user_prompt})
+        print(f"{self.model}'s response: \n")
+        print(response.content)
+
+        message_text = response.content + "\n\n"
+
+        print("Citations: \n")
+        # citations = response.model_extra.get("citations")
+        citations = response.additional_kwargs.get('citations',[])
+        if citations:
+            print("\nCitations:")
+            message_text += "Citations:\n"
+            for citation in citations:
+                print(citation)
+                message_text += f"{citation}\n"
+
+
+        if real_estate_questions:
+            self.write_to_real_estate_questions_file(self.model, self.country, message_text, self.prompt_number, self.outfile_comment)
+        else:
+            self.write_to_file(self.model, self.country, message_text, self.prompt_number)
+
+    def query_gemini_langchain(self, real_estate_questions:bool=False) -> None:
+        ''' Querys Google models via API and langchain functionality '''
+
+        chat = ChatGoogleGenerativeAI(temperature=0, google_api_key=self.supported_models[self.model], model=self.model,
+                                      max_tokens=None, timeout=120, safety_settings=safety_settings)
+
+        system = self.system_prompt
+        human = "{input}"
+        prompt = ChatPromptTemplate.from_messages([("system", system), ("human", human)])
+        
+        chain = prompt | chat
+        # response = chain.invoke({"input": self.user_prompt})
+        response = chain.stream({"input": self.user_prompt})
+
+        message_text = "\n"
+        print(f"{self.model}'s response: \n")
+        print("Assistant: ", end="")
+        for chunk in response:
+            print(chunk.content, end="")
+            message_text += chunk.content
+        
+        print() # for a new line at the end
+
+        # print(response.content)
+
+        # message_text = response.content + "\n\n"
+
+        # print("Citations: \n")
+        # # citations = response.model_extra.get("citations")
+        # citations = response.additional_kwargs.get('citations',[])
+        # if citations:
+        #     print("\nCitations:")
+        #     message_text += "Citations:\n"
+        #     for citation in citations:
+        #         print(citation)
+        #         message_text += f"{citation}\n"
+
+
+        if real_estate_questions:
+            self.write_to_real_estate_questions_file(self.model, self.country, message_text, self.prompt_number, self.outfile_comment)
+        else:
+            self.write_to_file(self.model, self.country, message_text, self.prompt_number)
+
+
+
 
     def query_model(self, real_estate_questions:bool=False) -> None:
         ''' The overarching that will submit a query to the selected model. '''
@@ -243,6 +331,19 @@ AI Response:
             self.query_openai(real_estate_questions)
         elif "sonar" in self.model:
             self.query_perplexity(real_estate_questions)
+        else:
+            print("No valid model selected, try again")
+
+
+    def query_model_langchain(self, real_estate_questions:bool=False) -> None:
+        ''' The overarching that will submit a query to the selected model. '''
+
+        if "gpt" in self.model:
+            self.query_openai_langchain(real_estate_questions)
+        elif "sonar" in self.model:
+            self.query_perplexity_langchain(real_estate_questions)
+        elif "gemini" in self.model:
+            self.query_gemini_langchain(real_estate_questions)
         else:
             print("No valid model selected, try again")
 

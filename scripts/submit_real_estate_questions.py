@@ -66,6 +66,9 @@ def main(args: argparse.Namespace) -> None:
                                user_prompt, prompt_index, args.system_prompt_num,
                                outfile_comment=file_type)
             
+            print(query.system_prompt+"\n")
+            print(query.user_prompt+"\n")
+            
             # Ensuring that all prompts have had their respective [country] specific data filled
             # print(f"[{idx+1}] {query.user_prompt}")
             if "[" in query.user_prompt:
@@ -73,12 +76,9 @@ def main(args: argparse.Namespace) -> None:
                 sys.exit(f"Error: The user prompt contains a placeholder for the country name. Please ensure that the prompt is correctly formatted before submitting to the model.")
 
             query.initialize_real_estate_questions_file()
-            # query.query_model(real_estate_questions=True)
-            query.query_perplexity_langchain(real_estate_questions=True)
+            query.query_model_langchain(real_estate_questions=True)
 
-            # if idx+1 == 2:
-            #     break
-            
+
         # print(f"country specific: {100*counter/query_limit}")
 
 
@@ -90,7 +90,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("-i", "--infile",  type=str, default="data/2025_INTERNSHIP_ORIENTATION-100_questions.csv", help="The regions that you want to probe, will loop over all countries in region")
     parser.add_argument("-c", '--country', type=str, default="Mexico", help="Specify a single country you would like to generate a prompt for")
-    parser.add_argument("-m", "--model",   type=str, default="gpt-4.1", choices=["gpt-4.1","sonar", "sonar-pro", "sonar-deep-research", "ms_copilot", "mistral", "gemini_2.5_flash"], help="The model that you want to query")
+    parser.add_argument("-m", "--model",   type=str, default="gpt-4.1", choices=["gpt-4.1","sonar", "sonar-pro", "sonar-deep-research", "ms_copilot", "mistral", "gemini-2.5-flash","gemini-2.5-pro"], help="The model that you want to query")
     parser.add_argument("-spn", "--system_prompt_num", type=int, default=3, help="The system prompt template that you want to submit to the model. List of all prompts is located in 'prompt templates'")
     parser.add_argument("-qn", "--question_num", type=int, default=-1, help="The specific question number that you want to query, this is used to select the question from the CSV file")
     args = parser.parse_args()
