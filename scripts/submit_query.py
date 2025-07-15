@@ -71,7 +71,7 @@ if __name__ == "__main__":
     parser.add_argument("-pn", "--prompt_num", type=int, default=12, help="The prompt template that you want to submit to the model. List of all prompts is located in 'prompt templates'")
     parser.add_argument("-spn", "--system_prompt_num", type=int, default=2, help="The system prompt template that you want to submit to the model. List of all prompts is located in 'prompt templates'")
     parser.add_argument("-c", '--country', type=str, default="Mexico", help="Specify a single country you would like to generate a prompt for")
-    parser.add_argument("-m", "--model", type=str, default="sonar-pro", choices=["gpt-4.1","sonar", "sonar-pro", "sonar-deep-research", "ms_copilot", "mistral", "gemini_2.5_flash", "manus"], help="The model that you want to query")
+    parser.add_argument("-m", "--model", type=str, default="sonar-pro", choices=["gpt-4.1","sonar", "sonar-pro", "sonar-deep-research", "ms_copilot", "mistral", "gemini-2.5-flash", "manus"], help="The model that you want to query")
 
 
     args = parser.parse_args()

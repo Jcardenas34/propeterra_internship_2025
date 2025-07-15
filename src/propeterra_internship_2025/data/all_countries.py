@@ -237,9 +237,11 @@ all_countries=[
 "Turkmenistan",
 "Tuvalu",
 "Uganda",
+"Uruguay",
 "Ukraine",
 "United Arab Emirates",
 "United States of America",
+"Venezuela",
 ]
 
 country_capitals = {
