@@ -1,7 +1,7 @@
+from propeterra_internship_2025.data.all_countries      import country_capitals
+from propeterra_internship_2025.utils.system_prompts    import system_prompt_dictionary
 from propeterra_internship_2025.data.reference_material import clean_reference_material, unclean_reference_material, country_languages
-from propeterra_internship_2025.data.all_countries import country_capitals
-from propeterra_internship_2025.utils.user_prompts import user_prompt_dictionary, real_estate_professionals_prompt_dictionary
-from propeterra_internship_2025.utils.system_prompts import system_prompt_dictionary
+from propeterra_internship_2025.utils.user_prompts      import user_prompt_dictionary, real_estate_professionals_prompt_dictionary
 
 def create_prompt(n_sources:int, country_of_interest:str, prompt_num:int, system_prompt_num:int) -> tuple[str, str]:
     ''' Generates the prompt according to specified template "prompt_num" '''

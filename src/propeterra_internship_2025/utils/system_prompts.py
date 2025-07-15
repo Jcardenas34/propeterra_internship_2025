@@ -14,11 +14,13 @@ system_prompt_3 = "You are an agent, who is an expert in the real estate industr
                   "Please keep going until the user's query is completely resolved, before ending your turn and yielding back to the user. Only terminate your turn when you are sure that the problem is solved or the question is answered. \n"\
                   "If you are not sure about the validity of your response or of the information that you gathered pertaining to the user's request, use your tools to read files and explore the internet and gather the relevant information: do NOT guess or make up an answer."                    
 
+system_prompt_4 = "Act as an expert in data collection and information discovery for the real estate industry. You are to assist the user in gathering information on real estate professionals in the country of __country_of_interest__. \n"
+
 system_prompt_dictionary = {
                     1:system_prompt_1,
                     2:system_prompt_2,
                     3:system_prompt_3,
-                    # 4:system_prompt_4,
+                    4:system_prompt_4,
                     # 5:system_prompt_5,
                     # 6:system_prompt_6,
                     # 7:system_prompt_7,

@@ -154,11 +154,23 @@ real_estate_professionals_prompt_1 = "Research and gather a list of all real est
                                      "Please organize the list of results as a json file that contains URLs to the real estate professional's website or to their affiliate group web page. The results should be organized   \n" \
                                      "in json format with the following keys 'data_sources':[ {'name': '','link': '', 'popularity': '', 'specialty': '', 'affiliate group':'', 'description': '' }] where 'specialty' is one of the categories I mentioned above. \n"
 
+real_estate_professionals_prompt_2 = "Research and gather a list of all real estate professionals that you can identify the following categories for the country of __country_of_interest__. \n" \
+                                     "Corporate Real Estate Management, Real Estate Investment, Real Estate Law, Media Consultant, Real Estate Management, Real Estate Development, Property Management, Real Estate Appraisal, Finance, Tech \n"\
+                                     "Real Estate Marketing, Real Estate Agent and Real Estate Brokerage. The information on the real estate professionals you gather will be used to recommend to potential customers according to their queries. \n"\
+                                     "Please organize the list of results as a JSON file that contains URLs to where you sourced the real estate professional's information, their affiliate group web page (if available) as well as the fields below. \n"\
+                                     "The results should be organized in JSON format with the following keys 'data_sources':[ {'full_name': '','link': '', 'specialty': '', 'affiliate group':'', 'description': '' , 'agent_biography':'', 'qualifications/certifications':'', 'phone_number':'', 'email':'', 'languages_spoken':'', 'graduate_institute'}] where 'specialty' is one of the categories I mentioned above. \n"\
+                                     "Think through your answer stp by step, and ask clarifying questions if you need more information. If a field cannot be filled simply place amply quotes in the field, Do NOT ever make anything up. "
+
+# This is the prompt that allowed Fidelity to find hundreds of real estate professionals throughout south africa, not that effective for Mexico though?
+real_estate_professionals_prompt_3 = "I am looking for Real Estate Professionals in __country_of_interest__, these should include All specialist: Corporate Real Estate Management, Real Estate investment, \n" \
+                                     "real estate law, media consultant, real estate management, real estate development, property management, real estate appraisal, finance, tech, real estate marketing,\n"\
+                                     "real estate agent, real estate brokerage etc. The data sources on these real estate professionals should include: full name, qualifications/certifications, expertise, \n"\
+                                     "contact information, language, education, LinkedIn profile, country, company, case studies, and testimonials. Give me as many as possible in an Excel sheet."
 
 real_estate_professionals_prompt_dictionary = {
                             1:real_estate_professionals_prompt_1,
-                            # 2:real_estate_professionals_prompt_2,
-                            # 3:real_estate_professionals_prompt_3,
+                            2:real_estate_professionals_prompt_2,
+                            3:real_estate_professionals_prompt_3,
                             # 4:real_estate_professionals_prompt_4,
                             # 5:real_estate_professionals_prompt_5,
                             # 6:real_estate_professionals_prompt_6,
