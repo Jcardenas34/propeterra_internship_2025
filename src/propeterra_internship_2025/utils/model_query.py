@@ -22,7 +22,7 @@ from propeterra_internship_2025.utils.system_prompts import system_prompt_dictio
 class QueryModel():
     ''' Class to select which model to query '''
 
-    def __init__(self, model:str, country:str, system_prompt:str, user_prompt:str, prompt_number:int, system_prompt_number:int, outfile_comment:str=""):
+    def __init__(self, model:str, country:str, system_prompt:str = "", user_prompt:str = "", prompt_number:int = -1, system_prompt_number:int = -1, outfile_comment:str=""):
         self.model = model
         self.country = country
         self.system_prompt = system_prompt
@@ -67,8 +67,19 @@ class QueryModel():
         with open(f"model_output/{country}/{model}_{country}_{date.today()}_real_estate_question_{prompt_number}{outfile_comment}.txt", "a", encoding="utf8") as file:
             file.write(response)
 
+    def write_to_real_estate_professional_search_file(self, model:str, country:str , response, prompt_number:int, outfile_comment:str):
+        ''' Writes the response from the model to a text file. And outputs prompt to console'''
+        if not os.path.isdir(f"model_output/{country}"):
+            os.mkdir(f"model_output/{country}")
+
+        with open(f"model_output/{country}/{model}_{country}_{date.today()}_real_estate_professional_search_prompt_{prompt_number}{outfile_comment}.txt", "a", encoding="utf8") as file:
+            file.write(response)
+
+
     def initialize_file(self):
         ''' Creates a default template to fill with model submission details for documentation purposes '''
+        
+        
         template = f'''
 User and Date:
 ------------------
@@ -136,7 +147,41 @@ AI Response:
 ----------------------
 
 '''
-        self.write_to_real_estate_questions_file(self.model, self.country, template, self.prompt_number, self.outfile_comment)
+        self.write_to_real_estate_professional_search_file(self.model, self.country, template, self.prompt_number, self.outfile_comment)
+
+    def initialize_real_estate_professional_search_file(self):
+        ''' Creates a default template to fill with model submission details for documentation purposes '''
+        template = f'''
+User and Date:
+------------------
+user: Juan Cardenas
+date: {date.today()}
+
+Country:
+------------
+country: {self.country}
+
+Data sourced using:
+----------------------
+method: 
+model: {self.model}
+
+General Notes:
+-----------------------
+
+Prompt:
+-----------------------
+system_prompt_num: {self.system_prompt_number}
+prompt_num: {self.prompt_number}
+
+{self.system_prompt+'\n\n'+self.user_prompt}
+
+AI Response:
+----------------------
+number_of_professionals: 
+
+'''
+        self.write_to_real_estate_professional_search_file(self.model, self.country, template, self.prompt_number, self.outfile_comment)
 
 
 
