@@ -50,9 +50,13 @@ def extract_first_json_object(text):
 
     return None  # No valid JSON block found
 
-def check_link(link):
+def check_link(link: str) -> tuple[bool| None, int]:
     """
     Check if a link returns 404 or any other fail type.
+    returns: Bool
+        True if link is broken and matches any of the failure codes
+        False if link is valid
+        None if link could not be checked
     """
     fail_types = [204, 400, 401, 404, 405, 408, 410, 429, 502, 503, 504]
     try:
@@ -67,11 +71,42 @@ def check_link(link):
         # print(f"Error checking link {link}: {e}")
         return None, -1
 
+def scrapeable_link(link:str) -> tuple[bool | None, int]:
+    """
+    Checks web pages robots.txt for indicators that it does not want to be scraped.
+    If 'Disallow: / ' is found, it returns False (Not scrape-able).
+
+    returns: Bool
+        True is can be scraped
+        False if it cannot be scraped
+        None if robots.txt could not be checked
+    """
+
+    root_link = link.split('/')[0] + '//' + link.split('/')[2] + '/robots.txt'
+    print(f"Checking robots.txt for {root_link}")
+
+    disallow_strings = ["Disallow: / ", "Disallow:/ "]
+
+    try:
+        response = requests.get(root_link)
+        # print(response.text)
+        if response.text in disallow_strings:
+            # print(f"Robots.txt disallows scraping for {root_link}")
+            return False, -100
+        else:
+            # print(f"Robots.txt allows scraping for {root_link}")
+            return True, 200
+        
+    except requests.RequestException as e:
+        print(f"Error checking link {root_link}: {e}")
+        return None, -1
+    
+
 def process_file(filename, logger, valid_link_tracker):
     """
     Process a single file and return valid entries + notes.
     """
-    with open(filename, 'r') as f:
+    with open(filename, 'r', encoding="utf8") as f:
         text = f.read()
         # ensuring that no other json dictionaries in the prompt are read
         text = text[text.find("AI Returned Links:"):]
@@ -98,6 +133,8 @@ def process_file(filename, logger, valid_link_tracker):
     valid_entries = []
     # saving invlid links because they are often not entirely invalid, could lead to good sources
     invalid_entries = []
+
+    non_scrapable_links = []
 
 
     for idx, item in enumerate(data_sources, 1):
